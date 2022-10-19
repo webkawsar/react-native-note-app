@@ -1,14 +1,15 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "../../App";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
-const auth = getAuth();
-const genderOptions = ["Male", "Female"];
+
 
 const SignUp = ({ navigation }) => {
+  const genderOptions = ["Male", "Female"];
   const [gender, setGender] = useState("Male");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ const SignUp = ({ navigation }) => {
         const user = userCredential.user;
         // create user profile
 
-        console.log('user => ', user)
+        // console.log('user => ', user)
 
       })
       .catch((error) => {
