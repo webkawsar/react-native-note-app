@@ -1,21 +1,60 @@
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
+const auth = getAuth();
 const genderOptions = ["Male", "Female"];
 
 const SignUp = ({ navigation }) => {
   const [gender, setGender] = useState("Male");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
+
+  const signUp = () => {
+
+    // at first create user
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+
+        // Signed in
+        const user = userCredential.user;
+        // create user profile
+
+        console.log('user => ', user)
+
+      })
+      .catch((error) => {
+        
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        
+        
+      });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 16, paddingVertical: 25 }}>
-        <Input placeholder="Full name" />
-        <Input placeholder="Email address" />
-        <Input placeholder="Password" secureTextEntry />
-        <Input placeholder="Age" />
+        <Input placeholder="Full name" onChangeText={(text) => setName(text)} />
+        <Input
+          placeholder="Email address"
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Input
+          placeholder="Password"
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+        />
+        <Input placeholder="Age" onChangeText={(text) => setAge(text)} />
+
+        <View style={{ marginVertical: 20 }}>
+          <Text>Select gender</Text>
+        </View>
 
         {genderOptions.map((option) => {
           const selected = option === gender;
@@ -54,6 +93,7 @@ const SignUp = ({ navigation }) => {
         }}
       >
         <Button
+          onPress={signUp}
           title="Submit"
           customStyles={{ alignSelf: "center", marginBottom: 25 }}
         />
