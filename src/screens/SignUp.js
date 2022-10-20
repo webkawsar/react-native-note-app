@@ -1,16 +1,21 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../App";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
-
-
 const SignUp = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const genderOptions = ["Male", "Female"];
   const [gender, setGender] = useState("Male");
   const [name, setName] = useState("");
@@ -18,43 +23,47 @@ const SignUp = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
 
-  
-
   const signUp = async () => {
-
     // at first create user
-      try {
-        
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        await addDoc(collection(db, 'users'), {
-          name,
-          email,
-          gender,
-          age,
-          uid: user.uid
-        })
-        
-      } catch (error) {
+    try {
+      setLoading(true);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      await addDoc(collection(db, "users"), {
+        name,
+        email,
+        gender,
+        age,
+        uid: user.uid,
+      });
 
-        console.log(error, 'error')
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-         showMessage({
-          message: 'Error',
-          type: 'danger'
-         })   
-      }
-
+      setLoading(false);
+    } catch (error) {
+      console.log(error, "error");
+      showMessage({
+        message: "Error",
+        type: "danger",
+      });
+      setLoading(false);
+    }
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 16, paddingVertical: 25 }}>
-        <Input placeholder="Full name" onChangeText={(text) => setName(text)} />
+        <Input
+          placeholder="Full name"
+          autoCapitalize="words"
+          onChangeText={(text) => setName(text)}
+        />
         <Input
           placeholder="Email address"
           onChangeText={(text) => setEmail(text)}
+          autoCapitalize="none"
         />
         <Input
           placeholder="Password"
@@ -103,11 +112,15 @@ const SignUp = ({ navigation }) => {
           paddingBottom: 40,
         }}
       >
-        <Button
-          onPress={signUp}
-          title="Submit"
-          customStyles={{ alignSelf: "center", marginBottom: 25 }}
-        />
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            onPress={signUp}
+            title="Submit"
+            customStyles={{ alignSelf: "center", marginBottom: 25 }}
+          />
+        )}
         <Pressable onPress={() => navigation.navigate("SignIn")}>
           <Text>
             Already have an account?{" "}

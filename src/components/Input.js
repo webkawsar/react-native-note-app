@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet, TextInput } from "react-native";
 
-const Input = ({ placeholder, secureTextEntry, onChangeText }) => {
+const Input = ({ placeholder, secureTextEntry, onChangeText, autoCapitalize }) => {
   return (
     <TextInput
       placeholder={placeholder}
       secureTextEntry={secureTextEntry}
       style={styles.input}
       onChangeText={onChangeText}
+      autoCapitalize={autoCapitalize}
     />
   );
 };

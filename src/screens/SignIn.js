@@ -1,11 +1,37 @@
-import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "../../App";
 import LoginImage from "../../assets/login-2.png";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
 const SignIn = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signIn = async () => {
+    try {
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // alert('sign in successfully')
+      
+    } catch (error) {
+      
+      console.log(error, 'signIn error');
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View>
@@ -24,8 +50,16 @@ const SignIn = ({ navigation }) => {
       </View>
 
       <View style={{ paddingHorizontal: 16, paddingVertical: 25 }}>
-        <Input placeholder="Email" />
-        <Input placeholder="Password" secureTextEntry />
+        <Input
+          placeholder="Email"
+          autoCapitalize="none"
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Input
+          placeholder="Password"
+          secureTextEntry
+          onChangeText={(text) => setPassword(text)}
+        />
       </View>
 
       <View
@@ -36,10 +70,15 @@ const SignIn = ({ navigation }) => {
           paddingBottom: 40,
         }}
       >
-        <Button
-          title="Login"
-          customStyles={{ alignSelf: "center", marginBottom: 25 }}
-        />
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            onPress={signIn}
+            title="Login"
+            customStyles={{ alignSelf: "center", marginBottom: 25 }}
+          />
+        )}
         <Pressable onPress={() => navigation.navigate("SignUp")}>
           <Text>
             Don't have an account?{" "}
