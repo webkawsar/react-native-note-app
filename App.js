@@ -70,7 +70,11 @@ export default function App() {
             <Stack.Screen name="Home" options={{ headerShown: false }}>
               {(props) => <Home {...props} user={user} />}
             </Stack.Screen>
-            <Stack.Screen name="Create" component={Create} />
+
+            <Stack.Screen name="Create">
+              {(props) => <Create {...props} user={user} />}
+            </Stack.Screen>
+
             <Stack.Screen name="Edit" component={Edit} />
           </>
         ) : (

@@ -1,17 +1,51 @@
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { db } from "../../App";
+import Button from "../components/Button";
 import Input from "../components/Input";
 import RadioInput from "../components/RadioInput";
 
-const Create = () => {
+const Create = ({navigation, route, user}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const noteColorOptions = ["red", "green", "blue"];
   const [noteColor, setNoteColor] = useState("blue");
+  const [loading, setLoading] = useState(false);
+
+  const createNote = async () => {
+    try {
+
+      setLoading(true);
+      await addDoc(collection(db, 'notes'), {
+        title,
+        description,
+        color: noteColor,
+        uid: user.uid
+      })
+
+      showMessage({
+        message: 'Note created successfully',
+        type: 'success'
+      })
+
+      setLoading(false);
+      navigation.goBack();
+      
+    } catch (error) {
+      
+      showMessage({
+        message: 'Server Error',
+        type: 'danger'
+      })
+      setLoading(false);
+    }    
+  }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={{ marginHorizontal: 20, flex: 1 }}>
         <Input placeholder="Title" onChangeText={(text) => setTitle(text)} />
         <Input
@@ -20,25 +54,33 @@ const Create = () => {
           multiline={true}
         />
 
-        {
-          noteColorOptions.map((color, index) => {
-            return (
-              <RadioInput
-                key={index}
-                label={color}
-                value={noteColor}
-                setValue={setNoteColor}
-              />
-            )
-          })         
-        }
+        <View style={{ marginVertical: 15 }}>
+          <Text>Select your note color</Text>
+        </View>
+        {noteColorOptions.map((color, index) => {
+          return (
+            <RadioInput
+              key={index}
+              label={color}
+              value={noteColor}
+              setValue={setNoteColor}
+            />
+          );
+        })}
 
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            onPress={createNote}
+            title="Submit"
+            customStyles={{ alignSelf: "center", marginTop: 60, width: '100%' }}
+          />
+        )}
       </View>
-
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   input: {
