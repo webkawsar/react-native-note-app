@@ -1,8 +1,10 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "../../App";
+import { auth, db } from "../../App";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
@@ -16,26 +18,34 @@ const SignUp = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
 
-  const signUp = () => {
+  
+
+  const signUp = async () => {
 
     // at first create user
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-
-        // Signed in
+      try {
+        
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        // create user profile
+        await addDoc(collection(db, 'users'), {
+          name,
+          email,
+          gender,
+          age,
+          uid: user.uid
+        })
+        
+      } catch (error) {
 
-        // console.log('user => ', user)
+        console.log(error, 'error')
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+         showMessage({
+          message: 'Error',
+          type: 'danger'
+         })   
+      }
 
-      })
-      .catch((error) => {
-        
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        
-        
-      });
   };
 
   return (

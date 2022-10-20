@@ -1,20 +1,21 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from 'firebase/firestore';
 import { StyleSheet } from "react-native";
+import FlashMessage from "react-native-flash-message";
+import firebaseConfig from "./src/config";
 import Create from "./src/screens/Create";
 import Edit from "./src/screens/Edit";
 import Home from "./src/screens/Home";
 import SignIn from "./src/screens/SignIn";
 import SignUp from "./src/screens/SignUp";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import firebaseConfig from "./src/config";
-
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
           </>
         )}
       </Stack.Navigator>
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 }
