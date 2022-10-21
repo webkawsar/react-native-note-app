@@ -13,7 +13,7 @@ const Home = ({ navigation, route, user }) => {
     const notesLister = onSnapshot(q, (snapShots) => {
       const lists = [];
       snapShots.forEach((doc) => {
-        lists.push(doc.data());
+        lists.push({...doc.data(), id: doc.id});
       });
 
       setNotes(lists);
@@ -46,6 +46,7 @@ const Home = ({ navigation, route, user }) => {
 
             return (
               <Pressable
+                onPress={() => navigation.navigate('Edit', {item})}
                 style={{
                   backgroundColor: color,
                   marginBottom: 10,
