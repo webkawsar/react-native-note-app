@@ -24,8 +24,7 @@ const Edit = ({navigation, route, user}) => {
       await updateDoc(docRef, {
         title,
         description,
-        color: noteColor,
-        uid: user.uid
+        color: noteColor
       });
       
       showMessage({
