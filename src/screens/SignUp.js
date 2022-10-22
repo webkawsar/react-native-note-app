@@ -42,7 +42,13 @@ const SignUp = ({ navigation }) => {
       });
 
       setLoading(false);
+      showMessage({
+        message: 'Sign up successfully',
+        type: 'success'
+      })
+      
     } catch (error) {
+      
       console.log(error, "error");
       showMessage({
         message: "Error",

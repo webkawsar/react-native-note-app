@@ -1,7 +1,9 @@
+import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { db } from "../../App";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import RadioInput from "../components/RadioInput";
@@ -18,24 +20,16 @@ const Edit = ({navigation, route, user}) => {
     try {
 
       setLoading(true);
-      // await addDoc(collection(db, 'notes'), {
-      //   title,
-      //   description,
-      //   color: noteColor,
-      //   uid: user.uid
-      // })
-
-      // const docRef = doc(db, "notes", item.id);
-      // alert(docRef, {
-        
-      // })
-      // await updateDoc(docRef, {
-      //   capital: true
-      // });
+      const docRef = doc(db, "notes", item.id);
+      await updateDoc(docRef, {
+        title,
+        description,
+        color: noteColor,
+        uid: user.uid
+      });
       
-
       showMessage({
-        message: 'Note created successfully',
+        message: 'Note updated successfully',
         type: 'success'
       })
 
@@ -44,8 +38,9 @@ const Edit = ({navigation, route, user}) => {
       
     } catch (error) {
       
+      console.log(error, 'error')
       showMessage({
-        message: 'Server Error',
+        message: 'Note updated failed',
         type: 'danger'
       })
       setLoading(false);

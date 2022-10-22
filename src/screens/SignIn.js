@@ -8,6 +8,7 @@ import {
   Text,
   View
 } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../App";
 import LoginImage from "../../assets/login-2.png";
@@ -24,11 +25,18 @@ const SignIn = ({ navigation }) => {
 
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      // alert('sign in successfully')
+      showMessage({
+        message: 'Sign in successfully',
+        type: 'success'
+      })
       
     } catch (error) {
       
       console.log(error, 'signIn error');
+      showMessage({
+        message: 'Sign in failed',
+        type: 'danger'
+      })
     }
   };
 
