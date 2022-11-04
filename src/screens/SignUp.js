@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -43,12 +44,10 @@ const SignUp = ({ navigation }) => {
 
       setLoading(false);
       showMessage({
-        message: 'Sign up successfully',
-        type: 'success'
-      })
-      
+        message: "Sign up successfully",
+        type: "success",
+      });
     } catch (error) {
-      
       console.log(error, "error");
       showMessage({
         message: "Error",
@@ -60,88 +59,90 @@ const SignUp = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 16, paddingVertical: 25 }}>
-        <Input
-          placeholder="Full name"
-          autoCapitalize="words"
-          onChangeText={(text) => setName(text)}
-        />
-        <Input
-          placeholder="Email address"
-          onChangeText={(text) => setEmail(text)}
-          autoCapitalize="none"
-        />
-        <Input
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
-        <Input placeholder="Age" onChangeText={(text) => setAge(text)} />
+      <ScrollView>
+        <View style={{ paddingHorizontal: 16, paddingVertical: 25 }}>
+          <Input
+            placeholder="Full name"
+            autoCapitalize="words"
+            onChangeText={(text) => setName(text)}
+          />
+          <Input
+            placeholder="Email address"
+            onChangeText={(text) => setEmail(text)}
+            autoCapitalize="none"
+          />
+          <Input
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+          <Input placeholder="Age" onChangeText={(text) => setAge(text)} />
 
-        <View style={{ marginVertical: 20 }}>
-          <Text>Select gender</Text>
-        </View>
+          <View style={{ marginVertical: 20 }}>
+            <Text>Select gender</Text>
+          </View>
 
-        {genderOptions.map((option) => {
-          const selected = option === gender;
+          {genderOptions.map((option) => {
+            const selected = option === gender;
 
-          return (
-            <Pressable
-              key={option}
-              style={styles.radioContainer}
-              onPress={() => setGender(option)}
-            >
-              <View
-                style={[
-                  styles.outerCircle,
-                  selected && styles.selectedOuterCircle,
-                ]}
+            return (
+              <Pressable
+                key={option}
+                style={styles.radioContainer}
+                onPress={() => setGender(option)}
               >
                 <View
                   style={[
-                    styles.innerCircle,
-                    selected && styles.selectedInnerCircle,
+                    styles.outerCircle,
+                    selected && styles.selectedOuterCircle,
                   ]}
-                />
-              </View>
-              <Text style={styles.radioText}>{option}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
+                >
+                  <View
+                    style={[
+                      styles.innerCircle,
+                      selected && styles.selectedInnerCircle,
+                    ]}
+                  />
+                </View>
+                <Text style={styles.radioText}>{option}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
 
-      <View
-        style={{
-          alignItems: "center",
-          flex: 1,
-          justifyContent: "flex-end",
-          paddingBottom: 40,
-        }}
-      >
-        {loading ? (
-          <ActivityIndicator />
-        ) : (
-          <Button
-            onPress={signUp}
-            title="Submit"
-            customStyles={{ alignSelf: "center", marginBottom: 25 }}
-          />
-        )}
-        <Pressable onPress={() => navigation.navigate("SignIn")}>
-          <Text>
-            Already have an account?{" "}
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: "green",
-                textDecorationLine: "underline",
-              }}
-            >
-              Sign in
+        <View
+          style={{
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "flex-end",
+            paddingBottom: 40,
+          }}
+        >
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Button
+              onPress={signUp}
+              title="Submit"
+              customStyles={{ alignSelf: "center", marginBottom: 25 }}
+            />
+          )}
+          <Pressable onPress={() => navigation.navigate("SignIn")}>
+            <Text>
+              Already have an account?{" "}
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "green",
+                  textDecorationLine: "underline",
+                }}
+              >
+                Sign in
+              </Text>
             </Text>
-          </Text>
-        </Pressable>
-      </View>
+          </Pressable>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
