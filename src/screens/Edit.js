@@ -1,6 +1,12 @@
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../App";
@@ -8,7 +14,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import RadioInput from "../components/RadioInput";
 
-const Edit = ({navigation, route, user}) => {
+const Edit = ({ navigation, route, user }) => {
   const item = route.params.item;
   const [title, setTitle] = useState(item.title);
   const [description, setDescription] = useState(item.description);
@@ -18,69 +24,76 @@ const Edit = ({navigation, route, user}) => {
 
   const updateNote = async () => {
     try {
-
       setLoading(true);
       const docRef = doc(db, "notes", item.id);
       await updateDoc(docRef, {
         title,
         description,
-        color: noteColor
+        color: noteColor,
       });
-      
+
       showMessage({
-        message: 'Note updated successfully',
-        type: 'success'
-      })
+        message: "Note updated successfully",
+        type: "success",
+      });
 
       setLoading(false);
       navigation.goBack();
-      
     } catch (error) {
-      
-      console.log(error, 'error')
+      console.log(error, "error");
       showMessage({
-        message: 'Note updated failed',
-        type: 'danger'
-      })
+        message: "Note updated failed",
+        type: "danger",
+      });
       setLoading(false);
-    }    
-  }
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ marginHorizontal: 20, flex: 1 }}>
-        <Input placeholder="Title" onChangeText={(text) => setTitle(text)} value={title} />
-        <Input
-          placeholder="Description"
-          onChangeText={(text) => setDescription(text)}
-          multiline={true}
-          value={description}
-        />
-
-        <View style={{ marginVertical: 15 }}>
-          <Text>Select your note color</Text>
-        </View>
-        {noteColorOptions.map((color, index) => {
-          return (
-            <RadioInput
-              key={index}
-              label={color}
-              value={noteColor}
-              setValue={setNoteColor}
-            />
-          );
-        })}
-
-        {loading ? (
-          <ActivityIndicator />
-        ) : (
-          <Button
-            onPress={updateNote}
-            title="Update"
-            customStyles={{ alignSelf: "center", marginTop: 60, width: '100%' }}
+      <ScrollView>
+        <View style={{ marginHorizontal: 20, flex: 1 }}>
+          <Input
+            placeholder="Title"
+            onChangeText={(text) => setTitle(text)}
+            value={title}
           />
-        )}
-      </View>
+          <Input
+            placeholder="Description"
+            onChangeText={(text) => setDescription(text)}
+            multiline={true}
+            value={description}
+          />
+
+          <View style={{ marginVertical: 15 }}>
+            <Text>Select your note color</Text>
+          </View>
+          {noteColorOptions.map((color, index) => {
+            return (
+              <RadioInput
+                key={index}
+                label={color}
+                value={noteColor}
+                setValue={setNoteColor}
+              />
+            );
+          })}
+
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Button
+              onPress={updateNote}
+              title="Update"
+              customStyles={{
+                alignSelf: "center",
+                marginTop: 60,
+                width: "100%",
+              }}
+            />
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
